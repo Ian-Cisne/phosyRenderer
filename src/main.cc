@@ -4,36 +4,25 @@
 #include <iostream> 
 #include <vector> 
 
-#include "logger.h"
-#include "vector_3d.h"
+#include "renderer.h"
 
-#include <lodepng.h>
 
 int main(int /*argc*/, char ** /*argv*/) {
 
     rasterizer::Logger& logger = rasterizer::Logger::getLogger(std::cerr);
 
     logger << rasterizer::LogLevel::kInfo << "Intiating...\n";
-    
-    unsigned int 
-        height= 512,
-        width = 512;
-    logger << rasterizer::LogLevel::kInfo << "Rendering image...\n";
+    constexpr float aspect_ratio  = 16.0f / 9.0f;
+    constexpr unsigned int height= 900;
+    constexpr unsigned int width = height * aspect_ratio;
 
-    std::vector<unsigned char> image;
-    for (int j = height-1; j >= 0; --j) {
-        for (int i = 0; i < width; ++i) {
-            rasterizer::Color pixel(float(i) / (width-1), float(j) / (height-1), 0.25f);
-            auto color = pixel.rgb();
-            image.insert(image.end(), color.begin(), color.end());
-
-        }
-    }
-    unsigned int errorCode;
-    if (errorCode = lodepng::encode("imagen.png", image, width, height, LCT_RGB)) {
-        logger << rasterizer::LogLevel::kError << "Encoder error " << errorCode << ": "<< lodepng_error_text(errorCode) << "\n";
-    } else {
-        logger << rasterizer::LogLevel::kInfo << "Image rendered succesfully!" << "\n";
-    }
+    rasterizer::Camera camera(
+        rasterizer::Point3D(0.0f, 0.0f, 0.0f),
+        2.0f,
+        2.0f * aspect_ratio,
+        1.0f
+    );
+    rasterizer::Renderer renderer(camera, height, width);
+    renderer.render();
     return EXIT_SUCCESS;
 }

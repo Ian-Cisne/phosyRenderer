@@ -1,5 +1,5 @@
-#ifndef VECTOR3D_H_
-#define VECTOR3D_H_
+#ifndef VECTOR_3D_H_
+#define VECTOR_3D_H_
 
 #include <ostream>
 #include <array>
@@ -15,11 +15,13 @@ namespace rasterizer
         float& r() { return values_[0]; }
         float& g() { return values_[1]; }
         float& b() { return values_[2]; }
+
         std::array<unsigned char, 3> rgb() { return {
             static_cast<unsigned char>(values_[0]*255.99),
             static_cast<unsigned char>(values_[1]*255.99),
             static_cast<unsigned char>(values_[2]*255.99)
             }; }
+        
         float& x() { return values_[0]; }
         float& y() { return values_[1]; }
         float& z() { return values_[2]; }
@@ -80,13 +82,12 @@ namespace rasterizer
             values_[0] *= oneOverA; values_[1] *= oneOverA; values_[2] *= oneOverA;
             return *this;
         }
+        Vector3D unit_vector() {
+            return *this / length();
+        }
         double length() const {
             return std::sqrt(values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2]);
         }
-        friend inline std::ostream& operator<<(std::ostream &, const Vector3D &);
-        friend inline Vector3D cross(const Vector3D &a, const Vector3D &b);
-        friend inline float distance(const Vector3D &a, const Vector3D &b);
-    private:
         
         float values_[3];
     };
@@ -101,6 +102,16 @@ namespace rasterizer
             a.values_[0]*b.values_[1] - a.values_[1]*b.values_[0]
         );
     }
+    inline Vector3D operator*(float a, const Vector3D &b) {
+            return Vector3D(b.values_[0]*a, b.values_[1]*a, b.values_[2]*a);
+    }
+
+        //You should not unse it with zero.
+    inline Vector3D operator /(float a, const Vector3D &b) {
+        float oneOverA = 1.0f / a; 
+        return Vector3D(b.values_[0]*oneOverA, b.values_[1]*oneOverA, b.values_[2]*oneOverA);
+    }
+    
     
     inline float distance(const Vector3D &a, const Vector3D &b) {
         float dx = a.values_[0] - b.values_[0];
