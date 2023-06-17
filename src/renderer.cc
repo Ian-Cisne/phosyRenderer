@@ -8,12 +8,12 @@ namespace rasterizer
 {
     Renderer::Renderer(Camera &&camera, unsigned int image_height, unsigned int image_width) 
         : camera{camera}, image_height{image_height}, image_width{image_width}, logger_{Logger::getLogger()} {
-        buffer.reserve(image_height * image_width * 3);
+        buffer.reserve(image_height * image_width * 3u);
     }
 
     void Renderer::render() {
         //Camera will be pointig towards -Z.
-        Vector3D lower_left_corner = camera.origin - camera.horizontal/2 - camera.vertical/2 - Vector3D(0, 0, camera.focal_length);
+
         for (int j = image_height-1; j >= 0; --j) {
             for (int i = 0; i < image_width; ++i) {
                 float u = float(i) / (image_width-1);
@@ -23,24 +23,27 @@ namespace rasterizer
                 commit_color(pixel_color);
             }
         }
+
         write_image();
     }
 
     Color Renderer::compute_pixel_color(Ray &ray) {
-        if (collision_detection(ray)) {
-            return Color(1, 0, 0);
+        float t = collision_detection(ray);
+        if (t > 0.0f) {
+            Vector3D normal = (ray.at(t) - Vector3D(0.0f, 0.0f, -1.0f)).unit_vector();
+            return 0.5 * Color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
         }
 
         Vector3D unit_direction = ray.direction().unit_vector();
-        auto t = 0.5*(unit_direction.y() + 1.0);
-        return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+        t = 0.5f * (unit_direction.y() + 1.0f);
+        return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
     }
 
     void Renderer::commit_color(Color color) {
         buffer.insert(buffer.end(), {
-            static_cast<unsigned char>(color.r()*255.9999),
-            static_cast<unsigned char>(color.g()*255.9999),
-            static_cast<unsigned char>(color.b()*255.9999)
+            static_cast<unsigned char>(color.r() * 255.9999f),
+            static_cast<unsigned char>(color.g() * 255.9999f),
+            static_cast<unsigned char>(color.b() * 255.9999f)
             });
     }
 
@@ -52,16 +55,20 @@ namespace rasterizer
         }
     }
 
-    bool Renderer::collision_detection(Ray &ray) {
-        auto center = Point3D(0,0,-1);
-        float radius = 0.5;
+    float Renderer::collision_detection(Ray &ray) {
+        auto center = Point3D(0.0f, 0.0f, -1.0f);
+        float radius = 0.5f;
 
         Vector3D oc = ray.origin() - center;
-        auto a = dot(ray.direction(), ray.direction());
-        auto b = 2.0 * dot(oc, ray.direction());
-        auto c = dot(oc, oc) - radius*radius;
-        auto discriminant = b*b - 4*a*c;
+        auto a = ray.direction().length_squared();
+        auto half_b = dot(oc, ray.direction());
+        auto c = oc.length_squared() - radius*radius;
+        auto discriminant = half_b*half_b - 4*a*c;
 
-        return (discriminant > 0);
+        if (discriminant < 0.0f) {
+            return -1.0f;
+        } else {
+            return (-half_b - sqrt(discriminant) ) / a;
+        }
     }
 }

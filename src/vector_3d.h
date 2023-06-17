@@ -99,6 +99,9 @@ namespace rasterizer
         float length() const {
             return std::sqrt(values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2]);
         }
+        float length_squared() const {
+            return values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2];
+        }
         
         float values_[3];
     };

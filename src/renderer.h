@@ -24,7 +24,7 @@ namespace rasterizer
         Color compute_pixel_color(Ray &ray);
         void commit_color(Color);
         void write_image();
-        bool collision_detection(Ray &ray);
+        float collision_detection(Ray &ray);
     };
 }
 
