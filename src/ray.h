@@ -24,6 +24,6 @@ namespace rasterizer
         Point3D orig;
         Vector3D dir;
     };
-}
+} // namespace rasterizer
 
 #endif

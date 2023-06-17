@@ -8,16 +8,22 @@ namespace rasterizer
     class Camera {
     
     public:
-        Camera(Point3D &&origin, float viewport_height , float viewport_width, float focal_length = 0)
-            : origin{origin}, viewport_height{viewport_height}, viewport_width{viewport_width}, focal_length{focal_length} {}
+        Camera(Point3D &&origin, Vector3D &&direction, float viewport_height , float viewport_width);
 
+        Ray rayAt(float u, float v);
         friend class Renderer;
     private:
         Point3D origin;
+        Vector3D direction;
+
+        Vector3D horizontal;
+        Vector3D vertical;
+        Vector3D lower_left_corner;
+
         float viewport_height;
         float viewport_width;
         float focal_length; 
     };
-}
+} // namespace rasterizer
 
 #endif
