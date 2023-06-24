@@ -58,14 +58,8 @@ namespace rasterizer {
         float radius = 0.5f;
 
         Vector3D oc = ray.origin() - center;
-        oc.values_[0] *= 4.0f;
-        oc.values_[1] *= 4.0f;
-        ray.dir.values_[0] *= 4.0f;
-        ray.dir.values_[1] *= 4.0f;
         auto a = ray.direction().length_squared();
         auto half_b = dot(oc, ray.direction());
-        ray.dir.values_[0] *= .25f;
-        ray.dir.values_[1] *= .25f;
         auto c = oc.length_squared() - radius*radius;
         auto discriminant = half_b*half_b - a*c;
             return (discriminant < 0.0f) 
