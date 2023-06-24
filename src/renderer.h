@@ -6,8 +6,8 @@
 #include "camera.h"
 #include "logger.h"
 
-namespace rasterizer
-{
+namespace rasterizer {
+
     class Renderer {
     
     public:
@@ -26,6 +26,7 @@ namespace rasterizer
         void write_image();
         float collision_detection(Ray &ray);
     };
-}
+
+} // namespace rasterizer
 
 #endif

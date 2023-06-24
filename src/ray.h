@@ -3,8 +3,8 @@
 
 #include "vector_3d.h"
 
-namespace rasterizer
-{
+namespace rasterizer {
+
     class Ray {
     
     public:
@@ -24,6 +24,7 @@ namespace rasterizer
         Point3D orig;
         Vector3D dir;
     };
+    
 } // namespace rasterizer
 
 #endif

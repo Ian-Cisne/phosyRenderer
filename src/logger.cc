@@ -1,12 +1,10 @@
 
 #include "logger.h"
 
-namespace rasterizer
-{
+namespace rasterizer {
     
     template <>
-    Logger & Logger::operator<<<LogLevel>(LogLevel const &level)
-    {
+    Logger & Logger::operator<<<LogLevel>(LogLevel const &level) {
         static std::array<std::string, LogLevelQuantities> prefixes (
             {
                 "\033[34;1m", //info
@@ -25,4 +23,5 @@ namespace rasterizer
 
         return *this;
     }
+
 } //namespace rasterizer

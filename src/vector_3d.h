@@ -6,8 +6,8 @@
 
 #include <math.h>
 
-namespace rasterizer
-{
+namespace rasterizer {
+
     class Vector3D {
     
     public:
@@ -102,7 +102,9 @@ namespace rasterizer
         float length_squared() const {
             return values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2];
         }
-        
+    
+    public:
+
         float values_[3];
     };
     
@@ -143,5 +145,7 @@ namespace rasterizer
     }
     using Point3D = Vector3D;   // 3D point
     using Color = Vector3D;   // RGB Color
+
 } // namespace rasteriver
+
 #endif

@@ -1,18 +1,16 @@
 
-
 #include "renderer.h"
 
 #include <lodepng.h>
 
-namespace rasterizer
-{
+namespace rasterizer {
+
     Renderer::Renderer(Camera &&camera, unsigned int image_height, unsigned int image_width) 
         : camera{camera}, image_height{image_height}, image_width{image_width}, logger_{Logger::getLogger()} {
         buffer.reserve(image_height * image_width * 3u);
     }
 
     void Renderer::render() {
-        //Camera will be pointig towards -Z.
 
         for (int j = image_height-1; j >= 0; --j) {
             for (int i = 0; i < image_width; ++i) {
@@ -30,7 +28,7 @@ namespace rasterizer
     Color Renderer::compute_pixel_color(Ray &ray) {
         float t = collision_detection(ray);
         if (t > 0.0f) {
-            Vector3D normal = (ray.at(t) - Vector3D(0.0f, 0.0f, -1.0f)).unit_vector();
+            Vector3D normal = (ray.at(t) - Vector3D(0.0f, 0.0f, -2.0f)).unit_vector();
             return 0.5 * Color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
         }
 
@@ -41,9 +39,9 @@ namespace rasterizer
 
     void Renderer::commit_color(Color color) {
         buffer.insert(buffer.end(), {
-            static_cast<unsigned char>(color.r() * 255.9999f),
-            static_cast<unsigned char>(color.g() * 255.9999f),
-            static_cast<unsigned char>(color.b() * 255.9999f)
+            static_cast<unsigned char>(color.r() * 255.9999847f),
+            static_cast<unsigned char>(color.g() * 255.9999847f),
+            static_cast<unsigned char>(color.b() * 255.9999847f)
             });
     }
 
@@ -56,19 +54,23 @@ namespace rasterizer
     }
 
     float Renderer::collision_detection(Ray &ray) {
-        auto center = Point3D(0.0f, 0.0f, -1.0f);
+        auto center = Point3D(0.0f, 0.0f, -2.0f);
         float radius = 0.5f;
 
         Vector3D oc = ray.origin() - center;
+        oc.values_[0] *= 4.0f;
+        oc.values_[1] *= 4.0f;
+        ray.dir.values_[0] *= 4.0f;
+        ray.dir.values_[1] *= 4.0f;
         auto a = ray.direction().length_squared();
         auto half_b = dot(oc, ray.direction());
+        ray.dir.values_[0] *= .25f;
+        ray.dir.values_[1] *= .25f;
         auto c = oc.length_squared() - radius*radius;
-        auto discriminant = half_b*half_b - 4*a*c;
-
-        if (discriminant < 0.0f) {
-            return -1.0f;
-        } else {
-            return (-half_b - sqrt(discriminant) ) / a;
-        }
+        auto discriminant = half_b*half_b - a*c;
+            return (discriminant < 0.0f) 
+                ? -1.0f 
+                : (-half_b - sqrt(discriminant) ) / a;
     }
+
 }

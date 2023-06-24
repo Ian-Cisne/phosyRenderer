@@ -39,7 +39,7 @@ namespace rasterizer
         Logger& operator=(const Logger&) = delete;
 
         template <typename T>
-        Logger & operator<<(T const &value) {
+        inline Logger & operator<<(T const &value) {
             stream_ << value;
             return *this;
         }
