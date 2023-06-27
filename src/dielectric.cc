@@ -14,4 +14,5 @@ namespace rasterizer {
         scattered = Ray(record.point, refracted);
         return true;
     }
+    
 } // namespace rasterizer
