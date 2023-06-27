@@ -5,8 +5,14 @@
 
 namespace rasterizer {
 
+
     Renderer::Renderer(Camera &&camera, unsigned int image_height, unsigned int image_width) 
-        : camera{camera}, image_height{image_height}, image_width{image_width}, logger_{Logger::getLogger()} {
+        : camera{camera}, 
+        image_height{image_height}, 
+        image_width{image_width}, 
+        logger_{Logger::getLogger()}, 
+        samples_per_pixel{15},
+        max_depth{50}{
         buffer.reserve(image_height * image_width * 3u);
     }
 
@@ -14,11 +20,15 @@ namespace rasterizer {
 
         for (int j = image_height-1; j >= 0; --j) {
             for (int i = 0; i < image_width; ++i) {
-                float u = float(i) / (image_width-1);
-                float v = float(j) / (image_height-1);
-                Ray ray = camera.rayAt(u, v);
-                Color pixel_color = compute_pixel_color(ray);
-                commit_color(pixel_color);
+                Color pixel_color(0.0f, 0.0f, 0.0f);
+                for (unsigned char p = 0;  p < samples_per_pixel; p++) {
+                    float u = (float(i) + random_decimal()) / (image_width-1);
+                    float v = (float(j) + random_decimal()) / (image_height-1);
+                    Ray ray = camera.rayAt(u, v);
+                    current_depth_ = max_depth;
+                    pixel_color += compute_pixel_color(ray);
+                }
+                commit_color(pixel_color * (1.0f / samples_per_pixel));
             }
         }
 
@@ -26,18 +36,25 @@ namespace rasterizer {
     }
 
     Color Renderer::compute_pixel_color(Ray &ray) {
-        float t = collision_detection(ray);
-        if (t > 0.0f) {
-            Vector3D normal = (ray.at(t) - Vector3D(0.0f, 0.0f, -2.0f)).unit_vector();
-            return 0.5 * Color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
+        if (current_depth_ == 0) {
+            return {0.0f, 0.0f, 0.0f};
+        }
+        current_depth_--;
+
+        HitRecord record;
+        if (world_.hit(ray, 0.0f, 100.0f, record)) {
+            Vector3D target = record.point + record.normal + Vector3D::random_unit_vector();
+            Ray nextRay{record.point, target - record.point};
+            return 0.5 * compute_pixel_color(nextRay);
         }
 
         Vector3D unit_direction = ray.direction().unit_vector();
-        t = 0.5f * (unit_direction.y() + 1.0f);
-        return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
+        record.t = 0.5f * (unit_direction.y() + 1.0f);
+        return ((1.0f - record.t) * Color(1.0f, 1.0f, 1.0f) + record.t * Color(0.5f, 0.7f, 1.0f)) ;
     }
 
-    void Renderer::commit_color(Color color) {
+    void Renderer::commit_color(Color &&color) {
+
         buffer.insert(buffer.end(), {
             static_cast<unsigned char>(color.r() * 255.9999847f),
             static_cast<unsigned char>(color.g() * 255.9999847f),
@@ -65,6 +82,10 @@ namespace rasterizer {
             return (discriminant < 0.0f) 
                 ? -1.0f 
                 : (-half_b - sqrt(discriminant) ) / a;
+    }
+
+    void Renderer::addHittable(std::shared_ptr<Hittable> object) {
+        world_.add(object);
     }
 
 }

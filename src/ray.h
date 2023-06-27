@@ -10,8 +10,7 @@ namespace rasterizer {
     public:
         Ray() {}
         Ray(const Point3D& origin, const Vector3D& direction)
-            : orig(origin), dir(direction)
-        {}
+            : orig{origin}, dir{direction} {}
 
         Point3D origin() const  { return orig; }
         Vector3D direction() const { return dir; }

@@ -4,12 +4,12 @@
 
 namespace rasterizer {
 
-    bool Sphere::hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const {
+    bool Sphere::hit(const Ray& ray, float t_min, float t_max, HitRecord& record) const {
         
-        Vector3D oc = r.origin() - center;
+        Vector3D oc = ray.origin() - center;
 
-        auto a = r.direction().length_squared();
-        auto half_b = dot(oc, r.direction());
+        auto a = ray.direction().length_squared();
+        auto half_b = dot(oc, ray.direction());
         auto c = oc.length_squared() - radius*radius;
 
         auto discriminant = half_b*half_b - a*c;
@@ -27,9 +27,9 @@ namespace rasterizer {
             }
         }
 
-        rec.t = root;
-        rec.p = r.at(rec.t);   
-        rec.set_face_normal(r, ((rec.p - center) / radius));
+        record.t = root;
+        record.point = ray.at(record.t);   
+        record.set_face_normal(ray, ((record.point - center) / radius));
 
 
         return true;

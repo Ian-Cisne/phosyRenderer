@@ -3,15 +3,22 @@
 
 #include <ostream>
 #include <array>
+#include <random>
 
 #include <math.h>
 
 namespace rasterizer {
 
+    float random_decimal();
+
+    float random_decimal(float min, float max);
+
     class Vector3D {
     
     public:
         
+        static Vector3D random_unit_vector();
+
         float& r() { return values_[0]; }
         float& g() { return values_[1]; }
         float& b() { return values_[2]; }

@@ -8,9 +8,9 @@ namespace rasterizer {
     class Sphere : public Hittable {
     public:
         Sphere() {}
-        Sphere(Point3D cen, float r) : center(cen), radius(r) {};
+        Sphere(Point3D center, float radius) : center{center}, radius{radius} {};
         
-        bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const override;
+        bool hit(const Ray& ray, float t_min, float t_max, HitRecord& record) const override;
     public: 
         Point3D center;
         float radius;
