@@ -11,8 +11,8 @@ namespace rasterizer {
         image_height{image_height}, 
         image_width{image_width}, 
         logger_{Logger::getLogger()}, 
-        samples_per_pixel{15},
-        max_depth{50}{
+        samples_per_pixel{12},
+        max_depth{40}{
         buffer.reserve(image_height * image_width * 3u);
     }
 
@@ -28,7 +28,7 @@ namespace rasterizer {
                     current_depth_ = max_depth;
                     pixel_color += compute_pixel_color(ray);
                 }
-                commit_color(pixel_color * (1.0f / samples_per_pixel));
+                commit_color(sqrt(pixel_color * (1.0f / samples_per_pixel)));
             }
         }
 
@@ -42,7 +42,7 @@ namespace rasterizer {
         current_depth_--;
 
         HitRecord record;
-        if (world_.hit(ray, 0.0f, 100.0f, record)) {
+        if (world_.hit(ray, 0.001f, 300.0f, record)) {
             Vector3D target = record.point + record.normal + Vector3D::random_unit_vector();
             Ray nextRay{record.point, target - record.point};
             return 0.5 * compute_pixel_color(nextRay);
@@ -81,7 +81,7 @@ namespace rasterizer {
         auto discriminant = half_b*half_b - a*c;
             return (discriminant < 0.0f) 
                 ? -1.0f 
-                : (-half_b - sqrt(discriminant) ) / a;
+                : (-half_b - std::sqrt(discriminant) ) / a;
     }
 
     void Renderer::addHittable(std::shared_ptr<Hittable> object) {

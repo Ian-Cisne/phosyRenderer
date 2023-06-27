@@ -21,4 +21,7 @@ namespace rasterizer {
         float thetasin = sin(theta); 
         return Vector3D( thetasin * cos(phi), thetasin * sin(phi), cos(theta));
     }
+    Vector3D sqrt(const Vector3D &a) {
+        return {std::sqrt(a.values_[0]), std::sqrt(a.values_[1]), std::sqrt(a.values_[2])};
+    }
 } // namespace rasteriver

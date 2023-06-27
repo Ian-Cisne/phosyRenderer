@@ -148,8 +148,9 @@ namespace rasterizer {
         float dx = a.values_[0] - b.values_[0];
         float dy = a.values_[1] - b.values_[1];
         float dz = a.values_[2] - b.values_[2];
-        return sqrt(dx*dx + dy*dy + dz*dz);
+        return std::sqrt(dx*dx + dy*dy + dz*dz);
     }
+    Vector3D sqrt(const Vector3D &a);
     using Point3D = Vector3D;   // 3D point
     using Color = Vector3D;   // RGB Color
 

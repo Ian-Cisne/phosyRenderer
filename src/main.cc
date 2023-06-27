@@ -16,7 +16,7 @@ int main(int argc, char ** argv) {
     logger << rasterizer::LogLevel::kInfo << "Intiating...\n";
 
     constexpr float aspect_ratio = 16.0f / 9.0f;
-    constexpr unsigned int height= 400;
+    constexpr unsigned int height= 300;
     constexpr unsigned int width = height * aspect_ratio;
 
     rasterizer::Renderer renderer( 
