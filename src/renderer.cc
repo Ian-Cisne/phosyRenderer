@@ -1,4 +1,5 @@
 
+#include "material.h"
 #include "renderer.h"
 
 #include <lodepng.h>
@@ -37,15 +38,17 @@ namespace rasterizer {
 
     Color Renderer::compute_pixel_color(Ray &ray) {
         if (current_depth_ == 0) {
-            return {0.0f, 0.0f, 0.0f};
+            return {0.0f, 1.0f, 0.0f};
         }
         current_depth_--;
 
         HitRecord record;
         if (world_.hit(ray, 0.001f, 300.0f, record)) {
-            Vector3D target = record.point + record.normal + Vector3D::random_unit_vector();
-            Ray nextRay{record.point, target - record.point};
-            return 0.5 * compute_pixel_color(nextRay);
+            Ray scattered;
+            Color attenuation;
+            if (record.material->scatter(ray, record, attenuation, scattered))
+                return attenuation * compute_pixel_color(scattered);
+            return Color(0,0,0);
         }
 
         Vector3D unit_direction = ray.direction().unit_vector();
@@ -54,12 +57,8 @@ namespace rasterizer {
     }
 
     void Renderer::commit_color(Color &&color) {
-
-        buffer.insert(buffer.end(), {
-            static_cast<unsigned char>(color.r() * 255.9999847f),
-            static_cast<unsigned char>(color.g() * 255.9999847f),
-            static_cast<unsigned char>(color.b() * 255.9999847f)
-            });
+        auto a = color.rgb();
+        buffer.insert(buffer.end(),a.begin(), a.end());
     }
 
     void Renderer::write_image() {

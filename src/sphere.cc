@@ -28,8 +28,9 @@ namespace rasterizer {
         }
 
         record.t = root;
-        record.point = ray.at(record.t);   
+        record.point = ray.at(record.t);
         record.set_face_normal(ray, ((record.point - center) / radius));
+        record.material = material;
 
 
         return true;

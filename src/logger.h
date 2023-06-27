@@ -8,8 +8,7 @@
 #include <iomanip>
 #include <ctime>
 
-namespace rasterizer
-{
+namespace rasterizer {
     enum LogLevel{
         kInfo,
         kSuccess,
@@ -22,7 +21,7 @@ namespace rasterizer
 
     class Logger {
     private:
-        Logger( std::ostream & stream):  stream_{stream}{
+        Logger( std::ostream &stream):  stream_{stream}{
         }
 
         ~Logger(){
@@ -30,7 +29,7 @@ namespace rasterizer
         }
 
     public:
-        static Logger& getLogger(std::ostream & stream=std::cerr) {
+        static Logger& getLogger(std::ostream &stream = std::cerr) {
             static Logger logger(stream);
             return logger;
         }
@@ -47,7 +46,6 @@ namespace rasterizer
         std::ostream &stream_;
         LogLevel loglevel_;
     };
-    
 
 } // namespace rasterizer
 

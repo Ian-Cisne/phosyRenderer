@@ -24,9 +24,9 @@ namespace rasterizer {
         float& b() { return values_[2]; }
 
         std::array<unsigned char, 3> rgb() { return {
-            static_cast<unsigned char>(values_[0]*255.99),
-            static_cast<unsigned char>(values_[1]*255.99),
-            static_cast<unsigned char>(values_[2]*255.99)
+            static_cast<unsigned char>(values_[0]*255.9999999000000059),
+            static_cast<unsigned char>(values_[1]*255.9999999000000059),
+            static_cast<unsigned char>(values_[2]*255.9999999000000059)
             }; }
         
         float& x() { return values_[0]; }
@@ -37,78 +37,54 @@ namespace rasterizer {
         auto end() {return std::end(values_);}
 
         Vector3D() {}
+        
         Vector3D(const Vector3D &a) {
             values_[0] = a.values_[0]; values_[1] = a.values_[1]; values_[2] = a.values_[2];
         }
 
         Vector3D(float nx, float ny, float nz) : values_{nx, ny, nz} {}
 
-        Vector3D &operator =(const Vector3D &a) {
-            values_[0] = a.values_[0]; values_[1] = a.values_[1]; values_[2] = a.values_[2];
-            return *this;
-        }
+        bool near_zero();
 
-        bool operator ==(const Vector3D &a) const {
-            return values_[0]==a.values_[0] && values_[1]==a.values_[1] && values_[2]==a.values_[2];
-        }
+        Vector3D reflect(const Vector3D& normal);
 
-        bool operator !=(const Vector3D &a) const {
-            return values_[0]!=a.values_[0] || values_[1]!=a.values_[1] || values_[2]!=a.values_[2];
-        }
+        Vector3D refract(const Vector3D& n, double etai_over_etat);
 
-        void toZero() { values_[0] = values_[1] = values_[2] = 0.0f; }
+        void toZero();
 
-        Vector3D operator -() const { return Vector3D(-values_[0],-values_[1],-values_[2]); }
+        Vector3D &operator =(const Vector3D &a);
 
-        Vector3D operator +(const Vector3D &a) const {
-            return Vector3D(values_[0] + a.values_[0], values_[1] + a.values_[1], values_[2] + a.values_[2]);
-        }
+        bool operator ==(const Vector3D &a) const;
 
-        Vector3D operator -(const Vector3D &a) const {
-            return Vector3D(values_[0] - a.values_[0], values_[1] - a.values_[1], values_[2] - a.values_[2]);
-        }
+        bool operator !=(const Vector3D &a) const;
 
-        Vector3D operator *(float a) const {
-            return Vector3D(values_[0]*a, values_[1]*a, values_[2]*a);
-        }
+        Vector3D operator -() const;
 
-        //You should not unse it with zero.
-        Vector3D operator /(float a) const {
-            float oneOverA = 1.0f / a; 
-            return Vector3D(values_[0]*oneOverA, values_[1]*oneOverA, values_[2]*oneOverA);
-        }
+        Vector3D operator +(const Vector3D &a) const;
 
-        Vector3D &operator +=(const Vector3D &a) {
-            values_[0] += a.values_[0]; values_[1] += a.values_[1]; values_[2] += a.values_[2];
-            return *this;
-        }
+        Vector3D operator -(const Vector3D &a) const;
 
-        Vector3D &operator -=(const Vector3D &a) {
-            values_[0] -= a.values_[0]; values_[1] -= a.values_[1]; values_[2] -= a.values_[2];
-            return *this;
-        }
+        Vector3D operator *(const Vector3D &a) const;
 
-        Vector3D &operator *=(float a) {
-            values_[0] *= a; values_[1] *= a; values_[2] *= a;
-            return *this;
-        }
+        Vector3D operator *(float a) const;
 
-        Vector3D &operator /=(float a) {
-            float oneOverA = 1.0f / a;
-            values_[0] *= oneOverA; values_[1] *= oneOverA; values_[2] *= oneOverA;
-            return *this;
-        }
+        //You should not use it with zero.
+        Vector3D operator /(float a) const;
 
-        Vector3D unit_vector() {
-            return *this / length();
-        }
+        Vector3D &operator +=(const Vector3D &a);
 
-        float length() const {
-            return std::sqrt(values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2]);
-        }
-        float length_squared() const {
-            return values_[0]*values_[0] + values_[1]*values_[1] + values_[2]*values_[2];
-        }
+        Vector3D &operator -=(const Vector3D &a);
+
+        Vector3D &operator *=(float a);
+
+        //You should not use it with zero.
+        Vector3D &operator /=(float a);
+
+        Vector3D unit_vector();
+
+        float length() const;
+
+        float length_squared() const;
     
     public:
 
