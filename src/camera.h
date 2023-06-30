@@ -8,7 +8,7 @@ namespace rasterizer
     class Camera {
     
     public:
-        Camera(Point3D &&origin, Vector3D &&direction, float viewport_height , float viewport_width);
+        Camera(Point3D &&origin, Vector3D &&direction, Vector3D &&vup, float vertical_fov , float aspect_ratio);
 
         Ray rayAt(float u, float v);
         friend class Renderer;

@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
     logger << rasterizer::LogLevel::kInfo << "Intiating...\n";
 
     constexpr float aspect_ratio = 16.0f / 9.0f;
-    constexpr unsigned int height= 600;
+    constexpr unsigned int height= 500;
     constexpr unsigned int width = height * aspect_ratio;
 
 
@@ -30,10 +30,11 @@ int main(int argc, char ** argv) {
 
     rasterizer::Renderer renderer(
         rasterizer::Camera(
-            rasterizer::Point3D(0.0f, 0.0f, 0.0f),
-            rasterizer::Vector3D(1.0f, 0.0f, -1.0f),
-            2.0f,
-            2.0f * aspect_ratio
+            rasterizer::Point3D(5.0f, 3.0f, 0.0f),
+            rasterizer::Vector3D(1.0f, 1.0f, 1.0f),
+            rasterizer::Vector3D(0.0f, 1.0f, 0.0f),
+            90.0f,
+            aspect_ratio
         ),
         height,
         width);
@@ -61,7 +62,7 @@ int main(int argc, char ** argv) {
     );
     renderer.addHittable(
         std::make_shared<rasterizer::Sphere>(
-            rasterizer::Point3D(3.0f, 2.5f, -7.0f),
+            rasterizer::Point3D(2.5f, 2.0f, -3.0f),
             1.0f,
             material_center
         )

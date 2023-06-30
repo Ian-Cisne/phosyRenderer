@@ -4,7 +4,6 @@
 #include <ostream>
 #include <array>
 #include <random>
-
 #include <math.h>
 
 namespace rasterizer {

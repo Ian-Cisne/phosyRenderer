@@ -46,8 +46,9 @@ namespace rasterizer {
         if (world_.hit(ray, 0.001f, 300.0f, record)) {
             Ray scattered;
             Color attenuation;
-            if (record.material->scatter(ray, record, attenuation, scattered))
+            if (record.material->scatter(ray, record, attenuation, scattered)) {
                 return attenuation * compute_pixel_color(scattered);
+            }
             return Color(0,0,0);
         }
 
