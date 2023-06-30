@@ -15,6 +15,8 @@ namespace rasterizer {
 
     public:
         float index_of_refraction;
+    private:
+        static float reflectance(float cosine, float ref_idx);
     };
     
 } // namespace rasterizer

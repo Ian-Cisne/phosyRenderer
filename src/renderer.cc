@@ -12,7 +12,7 @@ namespace rasterizer {
         image_height{image_height}, 
         image_width{image_width}, 
         logger_{Logger::getLogger()}, 
-        samples_per_pixel{12},
+        samples_per_pixel{30},
         max_depth{40}{
         buffer.reserve(image_height * image_width * 3u);
     }

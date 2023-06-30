@@ -14,10 +14,11 @@ namespace rasterizer {
     float random_decimal(float min, float max);
 
     class Vector3D {
-    
+    private:
+
     public:
-        
-        static Vector3D random_unit_vector();
+        static Vector3D uniform_random_unit_vector();
+        static Vector3D normal_random_unit_vector();
 
         float& r() { return values_[0]; }
         float& g() { return values_[1]; }

@@ -19,14 +19,14 @@ int main(int argc, char ** argv) {
     logger << rasterizer::LogLevel::kInfo << "Intiating...\n";
 
     constexpr float aspect_ratio = 16.0f / 9.0f;
-    constexpr unsigned int height= 500;
+    constexpr unsigned int height= 600;
     constexpr unsigned int width = height * aspect_ratio;
 
 
     auto material_ground = std::make_shared<rasterizer::Lambertian>(rasterizer::Color(0.8, 0.8, 0.0));
     auto material_center = std::make_shared<rasterizer::Lambertian>(rasterizer::Color(0.7, 1, 0.3));
     auto material_left = std::make_shared<rasterizer::Dielectric>(1.2f);
-    auto material_right   = std::make_shared<rasterizer::Metal>(rasterizer::Color(0.8, 0.8, 0.8));
+    auto material_right   = std::make_shared<rasterizer::Metal>(rasterizer::Color(0.8, 0.8, 0.8), 0.0f);
 
     rasterizer::Renderer renderer(
         rasterizer::Camera(

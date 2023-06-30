@@ -2,24 +2,31 @@
 #include "vector_3d.h"
 
 namespace rasterizer {
+    static std::default_random_engine generator;
 
     float random_decimal(){
         static std::uniform_real_distribution<float> distribution(0.0, 1.0);
-        static std::default_random_engine generator;
         return distribution(generator);
     }
 
     float random_decimal(float min, float max) {
         return (max - min) * random_decimal() + min;
     }
-    
-    Vector3D Vector3D::random_unit_vector() {
-        static std::uniform_real_distribution<float> distribution(0.0, 2.0);
-        static std::default_random_engine generator;
-        float phi = distribution(generator);
-        float theta = distribution(generator);
+
+    Vector3D Vector3D::uniform_random_unit_vector() {
+        static std::uniform_real_distribution<float> uniform_distribution_(0.0f, 2.0f);
+        float phi = uniform_distribution_(generator);
+        float theta = uniform_distribution_(generator);
         float thetasin = sin(theta); 
-        return Vector3D( thetasin * cos(phi), thetasin * sin(phi), cos(theta));
+        return Vector3D( thetasin * std::cos(phi), thetasin * std::sin(phi), std::cos(theta));
+    }
+
+    Vector3D Vector3D::normal_random_unit_vector() {
+        static std::normal_distribution<float> normal_distribution_(0.0f, 2.0f);
+        float phi = normal_distribution_(generator);
+        float theta = normal_distribution_(generator);
+        float thetasin = sin(theta); 
+        return Vector3D( thetasin * std::cos(phi), thetasin * std::sin(phi), std::cos(theta));
     }
 
     Vector3D sqrt(const Vector3D &a) {
