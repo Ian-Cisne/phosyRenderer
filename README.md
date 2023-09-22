@@ -7,4 +7,5 @@ This is a project whose intension is to follow [Ray-Traicing in One Weekend](htt
 I tried to use some features from C++11 to C++17.
 
 ![imagen](https://github.com/Ian-Cisne/phosyRenderer/assets/86418145/b58bc34b-bfcc-40f1-b9d2-d11b2a720b25)
+
 *Example of rendering*
